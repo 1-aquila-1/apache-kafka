@@ -1,8 +1,10 @@
 package br.com.aquila.kafka.ecommerce;
 
 import java.util.Properties;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -11,10 +13,11 @@ import org.apache.kafka.common.serialization.StringSerializer;
 public class NewOrder {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         var producer = new KafkaProducer<String, String>(properties());
-        var value = "1234,3456,222"; 
-        var key = "prod01";
-        var record = new ProducerRecord<>(Topic.ECOMMERCE_NEW_ORDER.name(), key, value); 
-        producer.send(record, (data, ex)->{
+        var key = UUID.randomUUID().toString();
+        var value = key+"1234,3456,111"; 
+        var newOrderRecord = new ProducerRecord<>(Topic.ECOMMERCE_NEW_ORDER.name(), key, value); 
+        
+        Callback callback = (data, ex)->{
             if(ex != null){
                 ex.printStackTrace();
                 return;
@@ -23,7 +26,12 @@ public class NewOrder {
             .concat(" /particion " + data.partition()+"")
             .concat(" /offset " + data.offset())
             .concat(" /timestamp " + data.timestamp()));
-        }).get();
+        };
+        
+        var emailValue = "Pedido de compra em processamento";
+        var emailRecord = new ProducerRecord<>(Topic.ECOMMERCE_SEND_EMAIL.name(), key, emailValue); 
+        producer.send(emailRecord, callback).get();
+        producer.send(newOrderRecord, callback).get();
     }
 
     private static Properties properties() {
