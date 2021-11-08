@@ -1,13 +1,15 @@
-package br.com.aquila.kafka.ecommerce;
+package br.com.aquila.ecommerce;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+
+import java.util.Map;
 
 public class EmailService {
 
     public static void main(String[] args) {
         var emailService = new EmailService();
-        try (var service = new KafkaService(EmailService.class.getSimpleName(), Topic.ECOMMERCE_SEND_EMAIL.name(),
-                emailService::parse)) {
+        try (var service = new KafkaService(EmailService.class.getSimpleName(), "ECOMMERCE_SEND_EMAIL",
+                emailService::parse, String.class, Map.of())) {
             service.run();
         }
     }
@@ -27,4 +29,5 @@ public class EmailService {
         }
         System.out.println("Email sent");
     }
+
 }
