@@ -1,4 +1,4 @@
-package br.com.aquila.ecommerce;
+package br.com.alura.ecommerce;
 
 import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -33,8 +33,7 @@ class KafkaDispatcher<T> implements Closeable {
                 ex.printStackTrace();
                 return;
             }
-            System.out.println("sucesso enviando " + data.topic() + ":::partition " + data.partition() + "/ offset "
-                    + data.offset() + "/ timestamp " + data.timestamp());
+            System.out.println("sucesso enviando " + data.topic() + ":::partition " + data.partition() + "/ offset " + data.offset() + "/ timestamp " + data.timestamp());
         };
         producer.send(record, callback).get();
     }

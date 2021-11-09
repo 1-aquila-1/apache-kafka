@@ -1,4 +1,4 @@
-package br.com.aquila.ecommerce;
+package br.com.alura.ecommerce;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 

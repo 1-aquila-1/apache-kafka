@@ -1,0 +1,6 @@
+Execução
+    - CreateUserService
+    - FraudDetectorService
+    - LogService
+    - EmailService
+    - NewOrderMain
